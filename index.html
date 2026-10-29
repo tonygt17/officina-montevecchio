@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Officina Montevecchio</title>
+<meta name="description" content="Officina meccanica specializzata a Torino, zona Crocetta. Tagliando, diagnosi elettronica, freni, pneumatici. Dal 1999.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&display=swap">
+
+<style>
+/* ── DESIGN TOKENS — dark industrial luxury ──────────────────
+   Layout: full-bleed editorial sections, 64px gutters desktop / 24px mobile
+   Typography: DM Sans (titoli peso 700, body peso 400)
+   Theme: committed dark — single visual world
+*/
+:root {
+  --bg:          #121212;
+  --bg-2:        #1A1A1A;
+  --bg-card:     #2A2A2A;
+  --fg:          #F5F5F5;
+  --fg-muted:    #909090;
+  --fg-subtle:   #404040;
+  --accent:      #D32F2F;
+  --accent-hi:   #D32F2F;
+  --border:      #333333;
+  --border-mid:  #444444;
+
+  --font-d: 'DM Sans', system-ui, sans-serif;
+  --font-b: 'DM Sans', system-ui, sans-serif;
+  --ease:   cubic-bezier(.4,0,.2,1);
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+img { max-width: 100%; }
+a { color: inherit; }
+
+/* ── NAV ──────────────────────────────────────────────────── */
+#nav {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  inset-inline: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem max(64px, env(safe-area-inset-right, 0px)) 1.5rem max(64px, env(safe-area-inset-left, 0px));
+  transition: background .4s var(--ease), padding .4s;
+}
+#nav.stuck {
+  background: rgba(12,11,10,.93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding-block: 1rem;
+}
+.nav-logo {
+  font-family: var(--font-d);
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-logo b { color: var(--fg); font-weight: 600; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .13em; text-transform: uppercase;
+  color: var(--fg-muted); text-decoration: none;
+  transition: color .2s; cursor: pointer;
+}
+.nav-links a:hover { color: var(--fg); }
+.nav-cta {
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-hi);
+  border: 1px solid var(--accent);
+  padding: .5rem 1.25rem;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--accent); color: var(--fg); }
+.nav-ham {
+  display: none; background: none; border: none;
+  cursor: pointer; color: var(--fg); padding: 4px;
+}
+/* mobile overlay */
+#mnav {
+  display: none; position: fixed; inset: 0;
+  background: rgba(12,11,10,.97); z-index: 99;
+  flex-direction: column; justify-content: center;
+  padding: 0 max(40px, env(safe-area-inset-left, 0px));
+  gap: 2rem;
+}
+#mnav.open { display: flex; }
+#mnav a {
+  font-family: var(--font-d);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 300; color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
+  transition: color .2s;
+}
+#mnav a:hover { color: var(--accent-hi); }
+#mnav-close {
+  position: absolute; top: 1.5rem;
+  right: max(24px, env(safe-area-inset-right, 0px));
+  background: none; border: none; color: var(--fg);
+  font-size: 1.5rem; cursor: pointer; line-height: 1;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+#hero {
+  position: relative; min-height: 100svh;
+  display: flex; align-items: flex-end;
+  padding: 0 max(64px, env(safe-area-inset-right, 0px)) 8rem max(64px, env(safe-area-inset-left, 0px));
+  overflow: hidden;
+}
+#hero-bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+  z-index: 0;
+}
+#hcanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; opacity: .08; z-index: 1;
+}
+.hero-grad {
+  position: absolute; inset: 0; z-index: 2;
+  background:
+    linear-gradient(to right, rgba(18,18,18,.82) 0%, rgba(18,18,18,.45) 60%, rgba(18,18,18,.2) 100%),
+    linear-gradient(to bottom, rgba(18,18,18,.3) 0%, transparent 40%, var(--bg) 100%);
+}
+.hero-body { position: relative; z-index: 3; max-width: 860px; }
+.hero-label {
+  font-size: .68rem; font-weight: 500; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--fg-muted);
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem; opacity: 0;
+}
+.hero-label::before {
+  content: ''; display: block; width: 36px; height: 1px; background: var(--fg-subtle);
+}
+h1.hero-h1 {
+  font-family: var(--font-d);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 700; line-height: .98;
+  letter-spacing: -.03em; margin-bottom: 2rem;
+}
+h1.hero-h1 em { font-style: italic; color: var(--fg); }
+.char { display: inline-block; opacity: 0; transform: translateY(55px); will-change: transform,opacity; }
+.hero-sub {
+  font-size: .97rem; color: var(--fg-muted);
+  max-width: 460px; line-height: 1.75;
+  margin-bottom: 3rem; opacity: 0;
+}
+.hero-btns {
+  display: flex; gap: 1.5rem; align-items: center;
+  flex-wrap: wrap; opacity: 0;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .75rem;
+  background: var(--accent); color: var(--fg);
+  font-family: var(--font-b); font-size: .78rem;
+  font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  padding: 1rem 2rem; text-decoration: none;
+  border: none; cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.btn-primary:hover { background: var(--accent-hi); transform: translateY(-1px); }
+.btn-primary:hover .arr { transform: translateX(4px); }
+.arr { transition: transform .2s; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .78rem; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--fg-muted);
+  text-decoration: none; background: none; border: none;
+  cursor: pointer; transition: color .2s;
+}
+.btn-ghost:hover { color: var(--fg); }
+.scroll-ind {
+  position: absolute; bottom: 2.5rem;
+  right: max(64px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column;
+  align-items: center; gap: .75rem; opacity: 0;
+}
+.scroll-line {
+  width: 1px; height: 56px;
+  background: linear-gradient(to bottom, transparent, var(--fg-muted));
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+.scroll-ind span {
+  writing-mode: vertical-rl; font-size: .62rem;
+  letter-spacing: .15em; text-transform: uppercase; color: var(--fg-subtle);
+}
+
+/* ── SHARED SECTION PRIMITIVES ────────────────────────────── */
+.sec { border-top: 1px solid var(--border); }
+.inner {
+  padding-left:  max(64px, env(safe-area-inset-left, 0px));
+  padding-right: max(64px, env(safe-area-inset-right, 0px));
+}
+.sec-label {
+  font-size: .65rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.sec-label::before {
+  content: ''; display: block; width: 30px; height: 1px; background: var(--fg-subtle);
+}
+.sec-title {
+  font-family: var(--font-d);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 700; line-height: 1.05;
+  letter-spacing: -.02em; text-wrap: balance;
+}
+.sec-title em { font-style: italic; color: var(--fg); }
+.reveal { opacity: 0; transform: translateY(22px); will-change: transform,opacity; }
+
+/* ── SERVICES ─────────────────────────────────────────────── */
+#services { padding: 8rem 0; }
+.svc-head {
+  display: flex; justify-content: space-between;
+  align-items: flex-end; gap: 2rem;
+  margin-bottom: 4rem; flex-wrap: wrap;
+}
+.svc-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--border);
+}
+.svc-card {
+  background: var(--bg); padding: 2.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.svc-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; width: 0; height: 2px;
+  background: var(--fg-subtle); transition: width .45s var(--ease);
+}
+.svc-card:hover { background: var(--bg-card); }
+.svc-card:hover::before { width: 100%; }
+.svc-icon {
+  width: 38px; height: 38px;
+  margin-bottom: 1.5rem; color: var(--fg-muted);
+  flex-shrink: 0;
+}
+.svc-num {
+  font-family: var(--font-d); font-size: .72rem;
+  font-weight: 300; letter-spacing: .1em;
+  color: var(--fg-subtle); margin-bottom: .35rem;
+}
+.svc-name {
+  font-family: var(--font-d); font-size: 1.15rem;
+  font-weight: 600; margin-bottom: .65rem; line-height: 1.25;
+  letter-spacing: -.01em;
+}
+.svc-desc {
+  font-size: .83rem; color: var(--fg-muted); line-height: 1.65;
+}
+
+/* ── STATS ────────────────────────────────────────────────── */
+#stats {
+  padding: 5.5rem 0;
+  background: var(--bg-2);
+  border-block: 1px solid var(--border);
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: var(--border);
+}
+.stat {
+  background: var(--bg-2); padding: 3rem 2rem; text-align: center;
+}
+.stat-n {
+  font-family: var(--font-d);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 700; line-height: 1;
+  letter-spacing: -.02em;
+  margin-bottom: .4rem;
+  font-variant-numeric: tabular-nums;
+}
+.stat-n em { font-style: normal; color: var(--fg-muted); }
+.stat-l {
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--fg-muted);
+}
+
+/* ── ABOUT ────────────────────────────────────────────────── */
+#about { padding: 8rem 0; border-bottom: 1px solid var(--border); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1.45fr;
+  gap: 6rem; align-items: center;
+}
+.about-vis {
+  position: relative; aspect-ratio: 4/5;
+  background: var(--bg-card);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.about-vis canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.about-badge {
+  position: absolute; bottom: 2rem; right: 2rem;
+  background: var(--fg); color: var(--bg);
+  padding: 1.25rem 1.5rem; text-align: center;
+}
+.about-badge b {
+  display: block;
+  font-family: var(--font-d); font-size: 2.25rem;
+  font-weight: 700; line-height: 1; letter-spacing: -.02em;
+}
+.about-badge span {
+  font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; opacity: .85;
+}
+.about-title {
+  font-family: var(--font-d);
+  font-size: clamp(1.9rem, 3.5vw, 2.9rem);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 1.75rem; text-wrap: balance;
+}
+.about-title em { font-style: italic; color: var(--fg); }
+.about-p {
+  font-size: .92rem; color: var(--fg-muted);
+  line-height: 1.8; margin-bottom: 1.25rem;
+}
+blockquote.about-q {
+  border-left: 2px solid var(--border-mid);
+  padding-left: 1.5rem; margin: 2.25rem 0;
+  font-family: var(--font-d); font-style: italic;
+  font-size: 1rem; font-weight: 500; color: var(--fg); line-height: 1.7;
+}
+.about-features { display: flex; flex-direction: column; gap: .85rem; margin-top: 2rem; }
+.about-feat {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: .83rem; color: var(--fg-muted);
+}
+.about-feat::before {
+  content: ''; display: block; width: 18px; height: 1px;
+  background: var(--fg-subtle); flex-shrink: 0;
+}
+
+/* ── GALLERY ──────────────────────────────────────────────── */
+#gallery { padding: 8rem 0; border-bottom: 1px solid var(--border); }
+.gal-head { margin-bottom: 3rem; }
+.gal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 380px 320px;
+  gap: 4px;
+}
+.gal-item:nth-child(4) { grid-column: span 1; }
+.gal-item:nth-child(5) { grid-column: span 2; }
+@media (max-width: 768px) {
+  .gal-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .gal-item { height: 260px; }
+  .gal-item:nth-child(5) { grid-column: span 1; }
+}
+.gal-item {
+  background: var(--bg-card); overflow: hidden; position: relative;
+  display: flex;
+}
+.gal-item img {
+  width: 100%; height: 100%; min-height: 100%;
+  object-fit: cover; display: block; flex-shrink: 0;
+  transition: transform .6s var(--ease);
+}
+.gal-item:hover img { transform: scale(1.04); }
+.gal-lbl {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(to top, rgba(12,11,10,.92) 0%, transparent 100%);
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fg-muted); opacity: 0; transition: opacity .3s;
+}
+.gal-item:hover .gal-lbl { opacity: 1; }
+
+/* ── TESTIMONIALS ─────────────────────────────────────────── */
+#testi {
+  padding: 8rem 0;
+  background: var(--bg-2);
+  border-block: 1px solid var(--border);
+}
+.testi-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1.5rem; margin-top: 3rem;
+}
+.testi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 2.5rem; position: relative;
+}
+.testi-card::before {
+  content: '"'; position: absolute;
+  top: 1.25rem; right: 1.75rem;
+  font-family: var(--font-d); font-size: 5rem;
+  line-height: 1; color: var(--fg-subtle); font-style: italic;
+}
+.stars {
+  display: flex; gap: 3px;
+  color: var(--fg-muted); margin-bottom: 1.25rem;
+}
+.testi-text {
+  font-family: var(--font-d); font-style: italic;
+  font-size: .92rem; line-height: 1.7;
+  color: var(--fg); margin-bottom: 1.5rem;
+}
+.testi-author { display: flex; align-items: center; gap: 1rem; }
+.testi-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--border-mid); display: flex;
+  align-items: center; justify-content: center;
+  font-family: var(--font-d); font-size: .95rem; color: var(--fg-muted);
+  flex-shrink: 0;
+}
+.testi-name { font-size: .84rem; font-weight: 500; }
+.testi-car { font-size: .72rem; color: var(--fg-muted); margin-top: .1rem; }
+
+/* ── CONTACT ──────────────────────────────────────────────── */
+#contact { padding: 8rem 0; }
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem;
+}
+.contact-h2 {
+  font-family: var(--font-d);
+  font-size: clamp(1.9rem, 3.5vw, 2.9rem);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -.02em; margin-bottom: 1.25rem;
+}
+.contact-h2 em { font-style: italic; color: var(--fg); }
+.contact-info p {
+  font-size: .88rem; color: var(--fg-muted);
+  line-height: 1.75; margin-bottom: 2.5rem; max-width: 400px;
+}
+.cdetails { display: flex; flex-direction: column; gap: 1.5rem; }
+.cdet { display: flex; gap: 1.25rem; align-items: flex-start; }
+.cdet-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: var(--bg-card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--fg-muted);
+}
+.cdet-lbl {
+  font-size: .62rem; font-weight: 500;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: .2rem;
+}
+.cdet-val { font-size: .88rem; color: var(--fg); line-height: 1.5; }
+/* Form */
+.cform {
+  background: var(--bg-card);
+  border: 1px solid var(--border); padding: 3rem;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.fg { margin-bottom: 1rem; }
+.fg label {
+  display: block; font-size: .68rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fg-muted); margin-bottom: .45rem;
+}
+.fg input, .fg select, .fg textarea {
+  width: 100%; background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg); font-family: var(--font-b);
+  font-size: .88rem; padding: .875rem 1rem;
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none; appearance: none;
+}
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--accent); }
+.fg textarea { resize: vertical; min-height: 110px; }
+.fg select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7265' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center; cursor: pointer;
+}
+.form-submit {
+  width: 100%; background: var(--accent); color: var(--fg);
+  border: none; font-family: var(--font-b);
+  font-size: .78rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 1.1rem; cursor: pointer;
+  transition: background .2s; margin-top: .5rem;
+  display: flex; align-items: center; justify-content: center; gap: .75rem;
+}
+.form-submit:hover { background: var(--accent-hi); }
+.form-note {
+  font-size: .68rem; color: var(--fg-muted);
+  text-align: center; margin-top: .9rem;
+}
+.form-success {
+  display: none; text-align: center; padding: 3.5rem 2rem;
+}
+.form-success.on { display: block; }
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+footer {
+  background: var(--bg-2); border-top: 1px solid var(--border);
+  padding: 3rem 0;
+}
+.foot-inner {
+  padding-left:  max(64px, env(safe-area-inset-left, 0px));
+  padding-right: max(64px, env(safe-area-inset-right, 0px));
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1.5rem;
+}
+.foot-logo {
+  font-family: var(--font-d); font-size: .8rem;
+  font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--fg-muted);
+}
+.foot-links { display: flex; gap: 2rem; list-style: none; }
+.foot-links a {
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-muted); text-decoration: none;
+  transition: color .2s;
+}
+.foot-links a:hover { color: var(--fg); }
+.foot-copy { font-size: .72rem; color: var(--fg-subtle); }
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .char { opacity: 1 !important; transform: none !important; }
+  .hero-label,.hero-sub,.hero-btns,.scroll-ind { opacity: 1 !important; }
+  .scroll-line { animation: none; opacity: .4; }
+  .svc-card::before { transition: none; }
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .svc-grid { grid-template-columns: repeat(2,1fr); }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .about-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+  .about-vis { aspect-ratio: 16/7; }
+  .gal-grid { grid-template-columns: repeat(3,1fr); grid-template-rows: 320px 280px; }
+  .testi-grid { grid-template-columns: repeat(2,1fr); }
+  .contact-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+}
+@media (max-width: 768px) {
+  /* ── Nav */
+  #nav { padding: 1.2rem max(20px, env(safe-area-inset-left, 0px)); }
+  .nav-links, .nav-cta { display: none; }
+  .nav-ham { display: block; }
+
+  /* ── Inner container horizontal padding */
+  .inner {
+    padding-left:  max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ── Section vertical padding: override inline style="padding-block:8rem" */
+  .sec { padding: 0; }
+  .inner { padding-block: 3.5rem !important; }
+  #stats { padding: 2.5rem 0; }
+  #gallery { padding: 0; }
+
+  /* ── Hero */
+  #hero {
+    padding: 0 max(20px, env(safe-area-inset-left, 0px)) 4.5rem;
+    min-height: 100svh;
+  }
+  h1.hero-h1 { font-size: clamp(2.2rem, 9vw, 3.5rem); margin-bottom: 1.25rem; }
+  .hero-sub { max-width: 100%; font-size: .88rem; margin-bottom: 2rem; }
+  .hero-btns { flex-direction: column; gap: .85rem; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; }
+  .scroll-ind { display: none; }
+
+  /* ── Services */
+  .svc-grid { grid-template-columns: 1fr; }
+  .svc-card { padding: 1.75rem 1.5rem; }
+  .svc-head { flex-direction: column; align-items: flex-start; }
+  .svc-head > .btn-ghost { display: none; } /* bottone preventivo ridondante nell'header */
+
+  /* ── Stats */
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .stat { padding: 2rem 1rem; }
+
+  /* ── About */
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .about-vis { aspect-ratio: 16/7; }
+
+  /* ── Gallery */
+  .gal-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .gal-item { height: 220px; }
+  .gal-item:nth-child(4), .gal-item:nth-child(5) { grid-column: span 1; }
+
+  /* ── Testimonials */
+  .testi-grid { grid-template-columns: 1fr; }
+  .testi-card { padding: 1.75rem 1.5rem; }
+
+  /* ── Contact */
+  .form-row { grid-template-columns: 1fr; }
+  .cform { padding: 1.75rem 1.25rem; }
+
+  /* ── Footer */
+  .foot-inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+}
+
+@media (max-width: 400px) {
+  h1.hero-h1 { font-size: 2rem; line-height: 1.05; }
+  .sec-title { font-size: 1.75rem; }
+  .stat-n { font-size: 2rem; }
+  #wa-btn span { display: none; }
+  #wa-btn { padding: .9rem; border-radius: 50%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── SCRIPTS ─────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- ─── NAV ────────────────────────────────────────────── -->
+<nav id="nav" role="navigation" aria-label="Navigazione principale">
+  <a href="#hero" class="nav-logo">Officina <b>Montevecchio</b></a>
+  <ul class="nav-links">
+    <li><a href="#services">Servizi</a></li>
+    <li><a href="#about">Chi siamo</a></li>
+    <li><a href="#gallery">Lavori</a></li>
+    <li><a href="#testi">Recensioni</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Prenota</a>
+  <button class="nav-ham" id="ham" aria-label="Apri menu" aria-expanded="false">
+    <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <line x1="0" y1="1" x2="22" y2="1"/>
+      <line x1="0" y1="7" x2="22" y2="7"/>
+      <line x1="0" y1="13" x2="22" y2="13"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- mobile overlay -->
+<div id="mnav" role="dialog" aria-modal="true" aria-label="Menu mobile">
+  <button id="mnav-close" aria-label="Chiudi menu">&#x2715;</button>
+  <a href="#services" onclick="closeMnav()">Servizi</a>
+  <a href="#about" onclick="closeMnav()">Chi siamo</a>
+  <a href="#gallery" onclick="closeMnav()">Lavori</a>
+  <a href="#testi" onclick="closeMnav()">Recensioni</a>
+  <a href="#contact" onclick="closeMnav()">Contatti</a>
+</div>
+
+<!-- ─── HERO ────────────────────────────────────────────── -->
+<section id="hero" aria-label="Intestazione">
+  <img id="hero-bg" src="img/hero-bg.jpg" alt="" aria-hidden="true" fetchpriority="high">
+  <canvas id="hcanvas" aria-hidden="true"></canvas>
+  <div class="hero-grad" aria-hidden="true"></div>
+  <div class="hero-body">
+    <p class="hero-label">Officina specializzata — Torino, Crocetta</p>
+    <h1 class="hero-h1" id="hh1">
+      <span class="word" style="display:block">L'Arte della</span>
+      <em class="word" style="display:block">Meccanica</em>
+      <span class="word" style="display:block">Italiana.</span>
+    </h1>
+    <p class="hero-sub">Da oltre 25 anni a Torino, riparare non è solo lavoro — è passione artigianale. Ogni auto che entra in officina riceve la cura che merita.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">
+        Prenota un appuntamento
+        <svg class="arr" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7.5h9M9 4l3.5 3.5L9 11"/></svg>
+      </a>
+      <a href="#services" class="btn-ghost">
+        Scopri i servizi
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6.5 2v9M3 9l3.5 3.5L10 9"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-ind" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── SERVICES ─────────────────────────────────────────── -->
+<section id="services" class="sec" aria-label="Servizi">
+  <div class="inner" style="padding-block: 8rem">
+    <div class="svc-head">
+      <div>
+        <div class="sec-label reveal">Cosa facciamo</div>
+        <h2 class="sec-title reveal">Servizi <em>completi</em><br>per la tua auto</h2>
+      </div>
+      <a href="#contact" class="btn-ghost reveal" style="flex-shrink:0">
+        Richiedi un preventivo
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6.5h7M7 3l3.5 3.5L7 10"/></svg>
+      </a>
+    </div>
+    <div class="svc-grid reveal">
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <circle cx="19" cy="19" r="11"/><circle cx="19" cy="19" r="4.5"/>
+          <path d="M19 3v4M19 31v4M3 19h4M31 19h4M7 7l2.8 2.8M28.2 28.2l2.8 2.8M7 31l2.8-2.8M28.2 9.8l2.8-2.8"/>
+        </svg>
+        <div class="svc-num">01</div>
+        <h3 class="svc-name">Tagliando & Manutenzione</h3>
+        <p class="svc-desc">Cambio olio, filtri, controllo freni e pneumatici. Seguiamo il piano manutentivo del costruttore con ricambi originali o equivalenti certificati OEM.</p>
+      </div>
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <rect x="4" y="10" width="30" height="16" rx="1"/>
+          <path d="M10 10V7a2 2 0 014 0v3M24 10V7a2 2 0 014 0v3"/>
+          <circle cx="13" cy="30" r="3"/><circle cx="25" cy="30" r="3"/>
+          <path d="M4 16h30"/>
+        </svg>
+        <div class="svc-num">02</div>
+        <h3 class="svc-name">Diagnosi Elettronica</h3>
+        <p class="svc-desc">Lettura codici di errore multi-brand con strumentazione professionale. Centraline motore, ABS, airbag, ADAS e sistemi ibridi.</p>
+      </div>
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <circle cx="19" cy="19" r="13" stroke-dasharray="3 2.5"/>
+          <circle cx="19" cy="19" r="7"/>
+          <circle cx="19" cy="19" r="2.5"/>
+          <path d="M19 6v4M19 28v4M6 19h4M28 19h4"/>
+        </svg>
+        <div class="svc-num">03</div>
+        <h3 class="svc-name">Freni & Sospensioni</h3>
+        <p class="svc-desc">Revisione completa dell'impianto frenante: dischi, pastiglie, pinze, liquido freni. Ammortizzatori, braccetti e geometria ruote per una guida precisa.</p>
+      </div>
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <circle cx="19" cy="19" r="14"/><circle cx="19" cy="19" r="6"/>
+          <path d="M19 5v4M19 29v4M5 19h4M29 19h4M9.5 9.5l2.8 2.8M25.7 25.7l2.8 2.8M28.5 9.5l-2.8 2.8M12.3 25.7l-2.8 2.8"/>
+        </svg>
+        <div class="svc-num">04</div>
+        <h3 class="svc-name">Pneumatici & Cerchi</h3>
+        <p class="svc-desc">Montaggio, equilibratura e convergenza 3D. Riparazione cerchi in lega, servizio gommista stagionale per tutti i marchi.</p>
+      </div>
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M5 28l4-12h20l4 12H5z"/>
+          <path d="M9 16l4-8h12l4 8"/>
+          <rect x="15" y="19" width="8" height="6"/>
+          <circle cx="10" cy="32" r="3"/><circle cx="28" cy="32" r="3"/>
+        </svg>
+        <div class="svc-num">05</div>
+        <h3 class="svc-name">Revisione & Collaudo</h3>
+        <p class="svc-desc">Preparazione alla revisione ministeriale, ispezione pre-acquisto usato, check 60 punti. Controllo di sicurezza prima dei lunghi viaggi.</p>
+      </div>
+
+      <div class="svc-card">
+        <svg class="svc-icon" viewBox="0 0 38 38" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <path d="M19 4L6 11v8c0 7.5 5.5 14.5 13 16.5 7.5-2 13-9 13-16.5v-8L19 4z"/>
+          <path d="M13 19l4 4 8-9"/>
+        </svg>
+        <div class="svc-num">06</div>
+        <h3 class="svc-name">Tagliando in Garanzia</h3>
+        <p class="svc-desc">Manutenzione programmata che mantiene valida la garanzia del costruttore, senza recarsi in concessionaria. Stessa qualità, più convenienza.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─────────────────────────────────────────────── -->
+<section id="stats" aria-label="I nostri numeri">
+  <div class="inner">
+    <div class="stats-grid">
+      <div class="stat reveal">
+        <div class="stat-n"><span class="cnt" data-t="25">0</span><em>+</em></div>
+        <div class="stat-l">Anni di Esperienza</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-n"><span class="cnt" data-t="4800">0</span><em>+</em></div>
+        <div class="stat-l">Auto Riparate</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-n"><span class="cnt" data-t="98">0</span><em>%</em></div>
+        <div class="stat-l">Clienti Soddisfatti</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-n"><span class="cnt" data-t="3">0</span></div>
+        <div class="stat-l">Meccanici Specializzati</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─────────────────────────────────────────────── -->
+<section id="about" class="sec" aria-label="Chi siamo">
+  <div class="inner" style="padding-block: 8rem">
+    <div class="about-grid">
+      <div class="about-vis reveal">
+        <canvas id="acanvas" aria-hidden="true"></canvas>
+        <div class="about-badge">
+          <b>1999</b>
+          <span>Fondata a Torino</span>
+        </div>
+      </div>
+      <div>
+        <div class="sec-label reveal">Chi siamo</div>
+        <h2 class="about-title reveal">Artigiani della <em>meccanica</em>,<br>nel cuore di Torino</h2>
+        <p class="about-p reveal">Officina Montevecchio nasce nel 1999 in zona Crocetta, uno dei quartieri più autentici di Torino. Siamo una piccola officina indipendente con grandi competenze: tre meccanici con oltre cinquant'anni di esperienza combinata su veicoli di ogni marca e modello.</p>
+        <blockquote class="about-q reveal">
+          "Una macchina ben riparata è una macchina che ti porta a casa. Ogni volta."
+        </blockquote>
+        <p class="about-p reveal">Lavoriamo con strumentazione diagnostica professionale di ultima generazione, ma il vero segreto è la cura artigianale: ogni auto è trattata come se fosse la nostra. Nessuna sorpresa in fattura, nessun lavoro non necessario.</p>
+        <div class="about-features reveal">
+          <div class="about-feat">Preventivo gratuito e trasparente prima di ogni intervento</div>
+          <div class="about-feat">Ricambi originali o equivalenti certificati OEM</div>
+          <div class="about-feat">Garanzia 12 mesi su tutti gli interventi eseguiti</div>
+          <div class="about-feat">Auto sostitutiva disponibile su prenotazione</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALLERY ───────────────────────────────────────────── -->
+<section id="gallery" class="sec" aria-label="I nostri lavori">
+  <div class="inner" style="padding-block: 8rem 0">
+    <div class="gal-head">
+      <div class="sec-label reveal">Portfolio</div>
+      <h2 class="sec-title reveal">Alcuni dei nostri <em>lavori</em></h2>
+    </div>
+  </div>
+  <div class="inner" style="padding-bottom:8rem">
+    <div class="gal-grid reveal">
+      <div class="gal-item"><img src="img/ig-2.jpg" alt="Pinza freno Maserati rossa" loading="lazy"><div class="gal-lbl">Freni sportivi — Maserati</div></div>
+      <div class="gal-item"><img src="img/ig-3.jpg" alt="Honda Civic Type-R sul ponte elevatore" loading="lazy"><div class="gal-lbl">Revisione — Honda Civic Type-R</div></div>
+      <div class="gal-item"><img src="img/ig-5.jpg" alt="Officina con più vetture in lavorazione" loading="lazy"><div class="gal-lbl">Vista officina — lavori multipli</div></div>
+      <div class="gal-item"><img src="img/ig-1.jpg" alt="Componenti turbocompressore smontato" loading="lazy"><div class="gal-lbl">Revisione turbo — lavoro di precisione</div></div>
+      <div class="gal-item"><img src="img/ig-4.jpg" alt="Fiat Punto gialla con cofano aperto" loading="lazy"><div class="gal-lbl">Intervento motore — Fiat Punto</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ──────────────────────────────────────── -->
+<section id="testi" class="sec" aria-label="Recensioni clienti">
+  <div class="inner" style="padding-block: 8rem">
+    <div class="sec-label reveal">Recensioni</div>
+    <h2 class="sec-title reveal">Quello che dicono<br>i nostri <em>clienti</em></h2>
+    <div class="testi-grid">
+
+      <div class="testi-card reveal">
+        <div class="stars" aria-label="5 stelle">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+        </div>
+        <p class="testi-text">"Finalmente un'officina dove ti dicono esattamente cosa serve fare — e solo quello. Ho portato la mia Giulia per un problema all'ABS che tre officine diverse non riuscivano a risolvere. Loro in due ore avevano diagnosticato e sistemato tutto."</p>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">M</div>
+          <div>
+            <div class="testi-name">Marco Ferretti</div>
+            <div class="testi-car">Alfa Romeo Giulia 2.0T</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="stars" aria-label="5 stelle">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+        </div>
+        <p class="testi-text">"Porto qui la mia BMW da quattro anni. I prezzi sono onesti, il lavoro è fatto bene e ti aggiornano durante l'intervento. Ho apprezzato la disponibilità del meccanico che mi ha spiegato passo passo ogni cosa."</p>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">S</div>
+          <div>
+            <div class="testi-name">Silvia Mantovani</div>
+            <div class="testi-car">BMW Serie 3 320d</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="stars" aria-label="5 stelle">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor" aria-hidden="true"><path d="M6.5 1l1.6 3.3L12 5.1l-2.7 2.6.6 3.8L6.5 9.7 3.1 11.5l.6-3.8L1 5.1l3.9-.8L6.5 1z"/></svg>
+        </div>
+        <p class="testi-text">"Ho una Fiat 500 Abarth che amo follemente. Prima di trovare Officina Montevecchio avevo sempre paura di portarla in officina. Adesso non vado da nessun'altra parte. Competenti, veloci, e sanno come si tratta un'auto sportiva."</p>
+        <div class="testi-author">
+          <div class="testi-av" aria-hidden="true">L</div>
+          <div>
+            <div class="testi-name">Lorenzo Capello</div>
+            <div class="testi-car">Fiat 500 Abarth 595</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ───────────────────────────────────────────── -->
+<section id="contact" class="sec" aria-label="Prenota un appuntamento">
+  <div class="inner" style="padding-block: 8rem">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="sec-label reveal">Contatti</div>
+        <h2 class="contact-h2 reveal">Prenota il tuo<br><em>appuntamento</em></h2>
+        <p class="reveal">Chiamaci o compila il modulo. Risponderemo entro poche ore con la prima disponibilità.</p>
+        <div class="cdetails reveal">
+          <div class="cdet">
+            <div class="cdet-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7.5 1C5 1 2.8 3.1 2.8 5.8c0 3.8 4.7 8.2 4.7 8.2s4.7-4.4 4.7-8.2C12.2 3.1 10 1 7.5 1z"/><circle cx="7.5" cy="5.8" r="1.5"/></svg>
+            </div>
+            <div>
+              <div class="cdet-lbl">Indirizzo</div>
+              <div class="cdet-val">Via Rodolfo Montevecchio 18, Torino<br>Zona Crocetta</div>
+            </div>
+          </div>
+          <div class="cdet">
+            <div class="cdet-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 1.5h3l1.5 3.3L5.6 6.2s.9 1.9 3 3l1.4-1.4L13.5 9v3c0 .6-.4 1-1 1C5.5 13 2 7.5 2 2.5c0-.6.4-1 .5-1z"/></svg>
+            </div>
+            <div>
+              <div class="cdet-lbl">Telefono</div>
+              <div class="cdet-val">350 161 5795</div>
+            </div>
+          </div>
+          <div class="cdet">
+            <div class="cdet-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="3" width="13" height="9" rx="1"/><path d="M1 4l6.5 4.5L14 4"/></svg>
+            </div>
+            <div>
+              <div class="cdet-lbl">Email</div>
+              <div class="cdet-val">info@officinamontevecchio.it</div>
+            </div>
+          </div>
+          <div class="cdet">
+            <div class="cdet-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.5" cy="7.5" r="5.5"/><path d="M7.5 4v3.5l2.5 1.5"/></svg>
+            </div>
+            <div>
+              <div class="cdet-lbl">Orari</div>
+              <div class="cdet-val">Lun–Ven 07:30–12:00 / 14:00–18:30<br>Sabato e Domenica chiuso</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cform reveal">
+        <div id="fwrap">
+          <form id="cform" novalidate>
+            <div class="form-row">
+              <div class="fg">
+                <label for="nome">Nome e Cognome</label>
+                <input type="text" id="nome" name="nome" placeholder="Mario Rossi" required autocomplete="name">
+              </div>
+              <div class="fg">
+                <label for="tel">Telefono</label>
+                <input type="tel" id="tel" name="tel" placeholder="011 000 0000" autocomplete="tel">
+              </div>
+            </div>
+            <div class="fg">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="mario@esempio.it" required autocomplete="email">
+            </div>
+            <div class="fg">
+              <label for="auto">La tua auto</label>
+              <input type="text" id="auto" name="auto" placeholder="Es. Fiat Punto 1.3 MJT 2015">
+            </div>
+            <div class="fg">
+              <label for="svc">Tipo di intervento</label>
+              <select id="svc" name="svc">
+                <option value="">Seleziona un servizio</option>
+                <option value="tagliando">Tagliando / Manutenzione ordinaria</option>
+                <option value="diagnosi">Diagnosi elettronica</option>
+                <option value="freni">Freni e sospensioni</option>
+                <option value="pneumatici">Pneumatici</option>
+                <option value="revisione">Revisione</option>
+                <option value="altro">Altro</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label for="msg">Note aggiuntive</label>
+              <textarea id="msg" name="msg" placeholder="Descrivi il problema o aggiungi dettagli..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">
+              Invia richiesta
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7.5h9M9 4l3.5 3.5L9 11"/></svg>
+            </button>
+            <p class="form-note">Dati usati esclusivamente per rispondere alla tua richiesta.</p>
+          </form>
+        </div>
+        <div id="fsuccess" class="form-success" role="alert" aria-live="polite">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke="var(--accent-hi)" stroke-width="1.3" style="margin:0 auto 1.5rem;display:block" aria-hidden="true">
+            <circle cx="26" cy="26" r="22"/>
+            <path d="M17 26l7 7 11-13"/>
+          </svg>
+          <h3 style="font-family:var(--font-d);font-size:1.6rem;font-weight:300;margin-bottom:.75rem">Richiesta inviata</h3>
+          <p style="color:var(--fg-muted);font-size:.88rem;line-height:1.75;max-width:320px;margin:0 auto">Ti risponderemo entro poche ore. A presto in officina.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-logo">Officina Montevecchio &mdash; Torino dal 1999</div>
+    <ul class="foot-links">
+      <li><a href="#services">Servizi</a></li>
+      <li><a href="#about">Chi siamo</a></li>
+      <li><a href="#contact">Contatti</a></li>
+    </ul>
+    <p class="foot-copy">P.IVA 01234567890 &bull; Via Rodolfo Montevecchio 18, Torino</p>
+  </div>
+</footer>
+
+<script>
+// ── registration
+gsap.registerPlugin(ScrollTrigger);
+const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ── nav sticky
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 60), { passive: true });
+
+// ── mobile nav
+const mnav = document.getElementById('mnav');
+function closeMnav() { mnav.classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('ham').addEventListener('click', () => { mnav.classList.add('open'); document.body.style.overflow = 'hidden'; });
+document.getElementById('mnav-close').addEventListener('click', closeMnav);
+
+// ── hero canvas — animated blueprint grid
+(function() {
+  const c = document.getElementById('hcanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let w, h, t = 0, raf;
+  function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; }
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+    const G = 52, ox = (t * .14) % G, oy = (t * .07) % G;
+    const cols = Math.ceil(w / G) + 2, rows = Math.ceil(h / G) + 2;
+    ctx.strokeStyle = '#F5F5F5'; ctx.lineWidth = .5;
+    for (let i = -1; i < cols; i++) {
+      ctx.globalAlpha = .06; ctx.beginPath();
+      ctx.moveTo(i * G - ox, 0); ctx.lineTo(i * G - ox, h); ctx.stroke();
+    }
+    for (let j = -1; j < rows; j++) {
+      ctx.globalAlpha = .06; ctx.beginPath();
+      ctx.moveTo(0, j * G - oy); ctx.lineTo(w, j * G - oy); ctx.stroke();
+    }
+    ctx.fillStyle = '#F5F5F5';
+    for (let i = -1; i < cols; i++) for (let j = -1; j < rows; j++) {
+      const x = i * G - ox, y = j * G - oy;
+      const d = Math.hypot(x - w * .67, y - h * .44) / (Math.min(w, h) * .6);
+      ctx.globalAlpha = Math.max(0, (1 - d) * .2);
+      ctx.beginPath(); ctx.arc(x, y, 1.4, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1; t++;
+    raf = requestAnimationFrame(frame);
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); }, { passive: true });
+  if (!rm) { frame(); }
+  else { frame(); cancelAnimationFrame(raf); }
+})();
+
+// ── about canvas — rotating gear
+(function() {
+  const c = document.getElementById('acanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let w, h, angle = 0, raf;
+  function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; }
+  function drawGear(cx, cy, r, teeth, a) {
+    const ir = r * .6, tr = r * .2, tw = (Math.PI * 2) / teeth * .4;
+    ctx.beginPath();
+    for (let i = 0; i < teeth; i++) {
+      const base = (i / teeth) * Math.PI * 2 + a;
+      for (let k = 0; k < 4; k++) {
+        const ra = [ir, r, r, ir][k], da = base + [0, tw * .2, tw * .8, tw][k];
+        k === 0 ? ctx.moveTo(cx + ra * Math.cos(da), cy + ra * Math.sin(da))
+                : ctx.lineTo(cx + ra * Math.cos(da), cy + ra * Math.sin(da));
+      }
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, ir * .4, 0, Math.PI * 2); ctx.stroke();
+  }
+  function frame() {
+    if (!rm) { angle += .003; raf = requestAnimationFrame(frame); }
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#F5F5F5'; ctx.lineWidth = 1; ctx.globalAlpha = .1;
+    const cx = w * .5, cy = h * .5, R = Math.min(w, h) * .35;
+    drawGear(cx, cy, R, 14, angle);
+    // concentric rings
+    [.55, .7, .85].forEach(f => {
+      ctx.beginPath(); ctx.arc(cx, cy, R * f, 0, Math.PI * 2); ctx.stroke();
+    });
+    // crosshairs
+    ctx.globalAlpha = .1;
+    ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
+    ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  resize(); frame();
+  window.addEventListener('resize', () => { resize(); frame(); }, { passive: true });
+})();
+
+
+// ── hero entrance animations
+if (!rm) {
+  // split words into chars
+  document.querySelectorAll('#hh1 .word').forEach(word => {
+    const text = word.textContent;
+    word.innerHTML = [...text].map(ch =>
+      ch === ' ' ? '<span class="char" style="opacity:1"> </span>'
+                 : `<span class="char">${ch}</span>`
+    ).join('');
+  });
+  gsap.to('#hh1 .char', {
+    opacity: 1, y: 0, duration: .7,
+    stagger: .018, ease: 'expo.out', delay: .25
+  });
+  gsap.to(['.hero-label', '.hero-sub', '.hero-btns', '.scroll-ind'], {
+    opacity: 1, y: 0, duration: .7,
+    stagger: .15, ease: 'power2.out', delay: .15
+  });
+
+  // scroll reveals
+  document.querySelectorAll('.reveal').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .65, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+    });
+  });
+
+  // counters
+  document.querySelectorAll('.cnt').forEach(el => {
+    const target = +el.dataset.t;
+    gsap.to({ v: 0 }, {
+      v: target, duration: 2, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 82%', toggleActions: 'play none none none' },
+      onUpdate() { el.textContent = Math.round(this.targets()[0].v).toLocaleString('it-IT'); }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el => { el.style.opacity='1'; el.style.transform='none'; });
+  document.querySelectorAll('.hero-label,.hero-sub,.hero-btns,.scroll-ind').forEach(el => el.style.opacity='1');
+  document.querySelectorAll('.cnt').forEach(el => { el.textContent = (+el.dataset.t).toLocaleString('it-IT'); });
+}
+
+// ── form
+document.getElementById('cform').addEventListener('submit', e => {
+  e.preventDefault();
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  if (!nome || !email) { document.getElementById('nome').focus(); return; }
+  document.getElementById('fwrap').style.display = 'none';
+  document.getElementById('fsuccess').classList.add('on');
+});
+</script>
+<!-- ─── WHATSAPP FLOATING BUTTON ──────────────────────────── -->
+<a
+  href="https://wa.me/393501615795?text=Ciao%2C%20vorrei%20richiedere%20un%20preventivo.%20La%20mia%20auto%20%C3%A8%3A%20"
+  target="_blank"
+  rel="noopener noreferrer"
+  id="wa-btn"
+  aria-label="Chiedici un preventivo su WhatsApp"
+>
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor" aria-hidden="true">
+    <path d="M14 0C6.27 0 0 6.27 0 14c0 2.47.65 4.79 1.78 6.8L0 28l7.4-1.74A13.94 13.94 0 0014 28c7.73 0 14-6.27 14-14S21.73 0 14 0zm0 25.6a11.56 11.56 0 01-5.9-1.6l-.42-.25-4.39 1.03 1.06-4.27-.28-.44A11.52 11.52 0 012.4 14C2.4 7.59 7.59 2.4 14 2.4S25.6 7.59 25.6 14 20.41 25.6 14 25.6zm6.34-8.64c-.35-.17-2.05-1.01-2.37-1.13-.32-.11-.55-.17-.78.17-.23.35-.9 1.13-1.1 1.36-.2.23-.4.26-.75.09-.35-.17-1.47-.54-2.8-1.72-1.03-.92-1.73-2.05-1.93-2.4-.2-.34-.02-.53.15-.7.15-.15.35-.4.52-.6.17-.2.23-.35.35-.58.11-.23.06-.43-.03-.6-.09-.17-.78-1.88-1.07-2.57-.28-.68-.57-.58-.78-.59h-.66c-.23 0-.6.09-.91.43-.32.35-1.2 1.17-1.2 2.86s1.23 3.32 1.4 3.55c.17.23 2.42 3.7 5.87 5.19.82.35 1.46.56 1.96.72.82.26 1.57.22 2.16.13.66-.1 2.05-.84 2.34-1.65.29-.8.29-1.5.2-1.64-.08-.15-.3-.23-.65-.4z"/>
+  </svg>
+  <span>Preventivo WhatsApp</span>
+</a>
+
+<style>
+#wa-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: .85rem 1.25rem;
+  border-radius: 50px;
+  font-family: var(--font-b);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  box-shadow: 0 4px 20px rgba(37,211,102,.35);
+  transition: transform .2s, box-shadow .2s;
+  bottom: max(2rem, calc(env(safe-area-inset-bottom, 0px) + 1rem));
+  right: max(2rem, env(safe-area-inset-right, 0px));
+}
+#wa-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(37,211,102,.45);
+}
+@media (max-width: 480px) {
+  #wa-btn span { display: none; }
+  #wa-btn { padding: 1rem; border-radius: 50%; }
+}
+</style>
+</body>
+</html>
